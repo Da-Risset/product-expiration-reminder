@@ -28,8 +28,8 @@ def main():
     
     base_format = ["%d-%m-%y", "%d-%m-%Y", "%Y-%m-%d"]
     
-    start = datetime(2022, 1, 1)
-    end = datetime(2025, 12, 31)
+    start = datetime(2022, 10, 1)
+    end = datetime(2022, 10, 3)
     
     x = 1
     for date in gen_date(start, end):
