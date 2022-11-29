@@ -39,6 +39,7 @@ Timelock Installation in Django Python
   ->source environment_name/bin/activate
   #Windows
   ->environment_name\Scripts\activate
+  
  
 >>>Install Django
  #linux & mac os

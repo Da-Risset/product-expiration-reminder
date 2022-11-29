@@ -1,0 +1,55 @@
+{% extends 'partials/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h2 class="card-title">Add Produk non-Kemasan</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" class="control-label">Category</label>
+                                <select class="form-control select2">
+                                    <option>Select</option>
+                                    <option value="BS">Buah & Sayur</option>
+                                    <option value="DI">Daging & Ikan</option>
+                                    <!-- <option value="KC">Kecantikan</option>
+                                    <option value="OB">Obat</option>
+                                    <option value="LA">Lainnya</option> -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" class="control-label">Features</label>
+                    
+                                <!-- <select class="select2 form-control select2-multiple" multiple="multiple" data-placeholder="Choose ...">
+                                    <option value="TO">Touchscreen</option>
+                                    <option value="CF">Call Function</option>
+                                    <option value="NO" selected>Notifications</option>
+                                    <option value="FI" selected>Fitness</option>
+                                    <option value="OU">Outdoor</option>
+                                </select> -->
+                            </div>
+                        </div>
+                    </div>
+                    <form class="form-group">
+                        <div class="form-group mb-2">
+                          <label for="exampleFormControlFile1">Upload Images</label>
+                          <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                        </div>
+                        <!-- <div class="form-group mb-3">
+                            <label for="exampleFormControlInput1">Nama Produk</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Nama Produk">
+                        </div> -->
+                        <button type="submit" class="btn btn-primary mb-2">Add Manual</button>
+                        <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                    </form>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+
+{% endblock content %}

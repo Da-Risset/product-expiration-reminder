@@ -1,7 +1,8 @@
 from django.http import request, StreamingHttpResponse, JsonResponse
-from django.shortcuts import redirect, render
-from django.views import View   
+from django.shortcuts import redirect, render, reverse
+from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 from . import models
 import os
@@ -61,7 +62,7 @@ def camera_feed(request):
         return StreamingHttpResponse(frames, content_type='multipart/x-mixed-replace; boundary=frame')
 
 
-def detect(request):
+def add_barcode(request):
     # stream = CameraStreamingWidget()
     # success, frame = stream.camera.read()
     # if success:
@@ -69,7 +70,7 @@ def detect(request):
     # else:
     #     status = False
     status = open_camera()
-    return render(request, 'pages/dashboard/barcode.html', context={'cam_status': status})
+    return render(request, 'pages/dashboard/barcode/add_barcode.html', context={'cam_status': status})
 
 
 def open_camera():
@@ -85,4 +86,43 @@ def open_camera():
 def add_product_kemasan(request):
     status = open_camera()
     return render(request, 'pages/dashboard/products/add_product_kemasan.html', context={'cam_status': status})
+
+
+class BarcodeListView(LoginRequiredMixin, ListView):
+    model = models.Barcode
+    template_name = 'pages/dashboard/barcode/list_barcode.html'
+    context_object_name = 'barcodes'
+    ordering = ['name']
+    paginate_by = 1000
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'List Barcode'
+        context['pageview'] = 'Barcode'
+        return context
+
+
+class BarcodeCreateView(LoginRequiredMixin, CreateView):
+    model = models.Barcode
+    fields = '__all__'
+    template_name = 'pages/dashboard/barcode/add_barcode.html'
+
+    def get_success_url(self):
+        return reverse('dashboard:list-barcode')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        status = open_camera()
+        context['cam_status'] = status
+        context['pageview'] = "Timelock"
+        context['title'] = "Add Barcode"
+        return context
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 

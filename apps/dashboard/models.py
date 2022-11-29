@@ -56,7 +56,7 @@ class ProductNonPackaging(BaseProduct):
 
 
 class Barcode(models.Model):
-    barcode = models.CharField(max_length=13)
+    barcode = models.CharField(max_length=43)
     name = models.CharField(max_length=100)
     company = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)

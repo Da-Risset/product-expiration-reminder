@@ -29,127 +29,41 @@
 								<span key="t-product">Product</span>
 							</a>
 							<ul class="sub-menu" aria-expanded="false">
-								<li><a href="#"key="t-daftar-products">Daftar Products</a>
-									<ul class="sub-menu" aria-expanded="false">
-										<li><a href="#" key="t-basic-tables" >Basic Tables</a>
-										</li>
-										<li><a href="#" key="t-data-tables" >Data Tables</a>
-										</li>
-										<li><a href="#" key="t-responsive-table" >Responsive Table</a>
-										</li>
-										<li><a href="#" key="t-editable-table" >Editable Table</a>
-										</li>
-									</ul>
+								<li><a href="#">Daftar Products</a>
 								</li>
-								<li><a href="#"key="t-edit-product">Add Product</a>
+								<li><a href="#"key="t-edit-product" class="has-arrow waves-effect">Add Product</a>
 									<ul class="sub-menu" aria-expanded="false">
 										<li><a href="{% url "dashboard:add-product-kemasan" %}" key="t-form-elements" >Kemasan Product</a>
 										</li>
 										<li><a href="#" key="t-form-upload" >Non Kemasan Product</a>
 										</li>
-		
+
 									</ul>
 								</li>
 							</ul>
-							<a href="javascript: void(0);" class="has-arrow waves-effect"> <i class="ri-mail-send-line"></i>
-								<span key="t-email">Email</span>
-							</a>
-							<ul class="sub-menu" aria-expanded="false">
-								<li><a href="#" key="t-inbox">Inbox</a>
-								</li>
-								<li><a href="#" key="t-read-email">Read Email</a>
-								</li>
-							</ul>
-							<li>
-								<a href="javascript: void(0);" class="has-arrow waves-effect"> <i class="ri-database-2-line"></i>
-									<span key="t-data-barcode">Data Barcode</span>
-								</a>
-								<ul class="sub-menu" aria-expanded="false">
-									<li><a href="#"key="t-list-barcode">List Barcode</a>
-									</li>
-									<li><a href="{% url "dashboard:add-barcode" %}" key="t-add-barcode">Add Barcode</a>
-									</li>
-								</ul>
-
-						</li>
-						<li class="menu-title" key="t-pages">Pages</li>
-						<li>
-							<a href="javascript: void(0);" class="has-arrow waves-effect"> <i class="ri-account-circle-line"></i>
-								<span key="t-authentication"> Authentication</span>
-							</a>
-							<ul class="sub-menu" aria-expanded="false">
-								<li><a href="{% url 'auth-login' %}" key="t-login">Login</a>
-								</li>
-								<li><a href="{% url 'auth-register'%}" key="t-register" >Register</a>
-								</li>
-								<li><a href="{% url 'auth-recoverpw'%}" key="t-recover-password" >Recover Password</a>
-								</li>
-								<li><a href="{% url 'auth-lock-screen' %}" key="t-lock-screen" >Lock Screen</a>
-								</li>
-								<li><a href="{% url 'auth-confirm-mail'%}" key="t-confirm-mail" >Confirm Mail</a>
-								</li>
-								<li><a href="{% url 'auth-email-verification'%}" key="t-email-verification" >Email Verification</a>
-								</li>
-								<li><a href="{% url 'auth-two-step-verification' %}" key="t-two-step-verification" >Two Step Verification</a>
-								</li>
-							</ul>
-
-						<li class="menu-title" key="t-components">Components</li>
-						<li>
-
-						</li>
-						<li>
-						<a href="javascript: void(0);" class="waves-effect"> <i class="ri-eraser-fill"></i>
-								<span class="badge rounded-pill bg-danger float-end">8</span>
-								<span key="t-forms" >Forms</span>
-							</a>
-							<ul class="sub-menu" aria-expanded="false">
-								<li><a href="#" key="t-form-elements" >Form Elements</a>
-								</li>
-								<li><a href="#" key="t-form-validation" >Form Validation</a>
-								</li>
-								<li><a href="#" key="t-form-advanced" >Form Advanced</a>
-								</li>
-								<li><a href="#" key="t-form-editors" >Form Editors</a>
-								</li>
-								<li><a href="#" key="t-form-upload" >Form File Upload</a>
-								</li>
-
-							</ul>
-						</li>
-						<li>
-							<a href="javascript: void(0);" class="has-arrow waves-effect"> <i class="ri-table-2"></i>
-								<span key="t-tables">Tables</span>
-							</a>
-							<ul class="sub-menu" aria-expanded="false">
-								<li><a href="#" key="t-basic-tables" >Basic Tables</a>
-								</li>
-								<li><a href="#" key="t-data-tables" >Data Tables</a>
-								</li>
-								<li><a href="#" key="t-responsive-table" >Responsive Table</a>
-								</li>
-								<li><a href="#" key="t-editable-table" >Editable Table</a>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="javascript: void(0);" class="has-arrow waves-effect"> <i class="ri-bar-chart-line"></i>
-								<span key="t-charts">Charts</span>
-							</a>
-							<ul class="sub-menu" aria-expanded="false">
-								<li><a href="#" key="t-apex-charts" >Apex Charts</a>
-								</li>
-								<li><a href="#" key="t-chartjs-charts" >Chartjs Charts</a>
-								</li>
-								<li><a href="#" key="t-flot-charts": >Flot Charts</a>
-								</li>
-								<li><a href="#" key="t-knob-charts" >Jquery Knob Charts</a>
-								</li>
-								<li><a href="#" key="t-sparkline-charts" >Sparkline Charts</a>
-								</li>
-							</ul>
-
-
+                        </li>
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow waves-effect"> <i class="ri-mail-send-line"></i>
+                                <span key="t-email">Email</span>
+                            </a>
+                            <ul class="sub-menu" aria-expanded="false">
+                                <li><a href="#" key="t-inbox">Inbox</a>
+                                </li>
+                                <li><a href="#" key="t-read-email">Read Email</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow waves-effect"> <i class="ri-database-2-line"></i>
+                                <span key="t-data-barcode">Data Barcode</span>
+                            </a>
+                            <ul class="sub-menu" aria-expanded="false">
+                                <li><a href="{% url "dashboard:list-barcode" %}"key="t-list-barcode">List Barcode</a>
+                                </li>
+                                <li><a href="{% url "dashboard:add-barcode" %}" key="t-add-barcode">Add Barcode</a>
+                                </li>
+                            </ul>
+                        </li>
 					</ul>
 				</div>
 				<!-- Sidebar -->

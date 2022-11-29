@@ -33,62 +33,118 @@
                                 </a>
                             </li>
                         </ul>
-                        <div class="tab-content twitter-bs-wizard-tab-content">
-                            <div class="tab-pane" id="barcode-scanner">
-                                <div class="row">
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <div class="tab-content twitter-bs-wizard-tab-content">
+                                <div class="tab-pane" id="barcode-scanner">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                        <h4 class="card-title">Scan Barcode</h4>
+                                        <p class="card-title-desc">Scan barcode anda</p>
+                                        {% if cam_status %}
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Camera stream status: connected
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                        <img src="{% url 'dashboard:camera_feed' %}" class="img-fluid mb-5" />
+                                        {% else %}
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                Camera stream status: Camera is either not accessible or busy
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>
+                                            <div class="alert alert-warning" role="alert">
+                                                <b>Things to check:</b>
+                                                <ul class="text-right list-inline">
+                                                    <li>USB connection?</li>
+                                                    <li>Camera is already in use?</li>
+                                                </ul>
+                                            </div>
+
+                                        {% endif %}
+                                    </div>
                                     <div class="col-lg-6">
-                                    <h4 class="card-title">Scan Barcode</h4>
-                                    <p class="card-title-desc">Scan barcode anda</p>
-                                    {% if cam_status %}
-                                    <h4>Camera stream status: connected</h4>
-                                    <img src="{% url 'dashboard:camera_feed' %}" style="width: 640px; height: 480px;" />
-                                    {% else %}
-                                        <div class="alert alert-danger" role="alert">
-                                            Camera stream status: Camera is either not accessible or busy
+                                        <h4 class="card-title">Information</h4>
+                                        <p class="card-title-desc">Barcode Information</p>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="{{ form.barcode.id_for_label }}">{{ form.barcode.label }}</label>
+                                                <input id="{{ form.barcode.id_for_label }}" name="{{ form.barcode.name }}" class="form-control" readonly>
+                                                {% if form.barcode.errors %}
+                                                    {% for error in form.barcode.errors %}
+                                                        <div class="alert alert-danger mt-3" role="alert">
+                                                            {{ error }}
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="{{ form.name.id_for_label }}">Product Name</label>
+                                                <input id="{{ form.name.id_for_label }}" name="{{ form.name.name }}" class="form-control" readonly>
+                                                {% if form.name.errors %}
+                                                    {% for error in form.name.errors %}
+                                                        <div class="alert alert-danger mt-3" role="alert">
+                                                            {{ error }}
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                            <div class="mb-3">
+                                                <em id="lbl_LastModified"></em>
+                                            </div>
+                                            <div id="ifExists" class="mb-3" hidden>
+                                                <div class="alert alert-danger mt-3" role="alert">
+                                                    Product already exists
+                                                </div>
+                                            </div>
+
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <a id="btn_ReadQRCode" class="btn btn-primary" href="#">Read barcode</a>
+                                            </div>
                                         </div>
-                                        <div class="alert alert-warning" role="alert">
-                                            <b>Things to check:</b>
-                                            <ul class="text-right list-inline">
-                                                <li>USB connection?</li>
-                                                <li>Camera is already in use?</li>
-                                            </ul>
-                                        </div>
 
-                                    {% endif %}
+
+                                    </div>
+                                    </div>
+
                                 </div>
-                                <div class="col-lg-6">
-                                    <h4 class="card-title">Information</h4>
-                                    <p class="card-title-desc">Barcode Information</p>
+                                <div class="tab-pane" id="product-img">
+                                    <h4 class="card-title">Optional Information</h4>
+                                    <p class="card-title-desc">Fill all information below</p>
                                     <div class="mb-3">
-                                        <label class="form-label" for="price">Barcode</label>
-                                        <input id="barcode" name="barcode" type="text" class="form-control" readonly>
+                                        <label class="form-label" for="{{ form.company.id_for_label }}">Company Name</label>
+                                        <input id="{{ form.company.id_for_label }}" name="{{ form.company.name }}" type="text" class="form-control">
+                                        {% if form.company.errors %}
+                                            {% for error in form.company.errors %}
+                                                <div class="alert alert-danger" role="alert">
+                                                    {{ error }}
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label" for="{{ form.description.id_for_label }}">Product Description</label>
+                                        <textarea class="form-control" id="{{ form.description.id_for_label }}" name="{{ form.description.name }}" rows="5"></textarea>
+                                        {% if form.description.errors %}
+                                            {% for error in form.description.errors %}
+                                                <div class="alert alert-danger" role="alert">
+                                                    {{ error }}
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
                                     </div>
                                 </div>
-                                </div>
-
                             </div>
-                            <div class="tab-pane" id="product-img">
-                                <h4 class="card-title">Basic Information</h4>
-                                <p class="card-title-desc">Fill all information below</p>
+                            <ul class="pager wizard twitter-bs-wizard-pager-link">
+                                <li class="previous"><a id="btn_previous" href="#">Previous</a></li>
+                                <li class="next">
+                                    <a id="btn_next" href="#">Next</a>
+                                    <button id="btn_submit" class="btn btn-success" type="submit" hidden>Submit</button>
+                                    <button id="back_list_barcode" class="btn btn-outline-warning waves-effect waves-light" href="{% url "dashboard:list-barcode" %}" hidden>Back</button>
+                                </li>
 
-                                <form>
-                                    <div class="mb-3">
-                                        <label class="form-label" for="productname">Product Name</label>
-                                        <input id="productname" name="productname" type="text" class="form-control">
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label" for="productdesc">Product Description</label>
-                                        <textarea class="form-control" id="productdesc" rows="5"></textarea>
-                                    </div>
-                                </form>
-                            </div>
-
-                        </div>
-                        <ul class="pager wizard twitter-bs-wizard-pager-link">
-                            <li class="previous"><a href="#">Previous</a></li>
-                            <li class="next"><a href="#">Next</a></li>
-                        </ul>
+                            </ul>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -111,5 +167,56 @@
 
     <!-- init js -->
     <script src="{% static 'js/pages/ecommerce-add-product.init.js' %}"></script>
+
+    <script>
+    $("#btn_ReadQRCode").on("click", function (e) {
+        console.log("Ajax request triggered.");
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'dashboard:camera_feed' %}",
+            data: {
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                dataType: "json",
+            },
+            success: function (data) {
+                if (data.barcode_data !== null && data.barcode_data !== '') {
+                    console.log(data);
+                    $("#{{ form.barcode.id_for_label }}").val(data.barcode_data).change();
+                    $("#lbl_LastModified").html(
+                        "Last modified at: " + data.file_saved_at
+                    );
+                    if (data.barcode_name !== null && data.barcode_name !== '') {
+                        $("#{{ form.name.id_for_label }}").val(data.barcode_name).change();
+                        $("#ifExists").removeAttr("hidden");
+                        $("#btn_next").attr("hidden", true);
+                        $("#back_list_barcode").removeAttr("hidden");
+                    }
+                    else {
+                        $("#{{ form.name.id_for_label }}").removeAttr("readonly");
+                        $("#{{ form.name.id_for_label }}").val("No name found").change();
+                        $("#btn_AddNewBarcode").removeAttr("hidden");
+                        $("#ifExists").attr("hidden", true);
+                    }
+                } else {
+                    console.log(data);
+                    $("#{{ form.barcode.id_for_label }}").val("").change();
+                    $("#lbl_LastModified").html("<h3><em>No data or file not found. Scan barcode again.</em></h3>");
+                }
+            },
+            error: function () {
+                console.log(error);
+            }
+        });
+    });
+    $("#btn_next").on("click", function (e) {
+        $("#btn_next").attr("hidden", true);
+        $("#btn_submit").removeAttr("hidden");
+    });
+    $("#btn_previous").on("click", function (e) {
+        $("#btn_next").removeAttr("hidden");
+        $("#btn_submit").attr("hidden", true);
+    });
+    </script>
 
 {% endblock extra_javascript %}
