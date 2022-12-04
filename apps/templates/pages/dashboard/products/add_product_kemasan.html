@@ -1,5 +1,6 @@
 {% extends "partials/base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block extra_css %}
     <!-- twitter-bootstrap-wizard css -->
@@ -10,9 +11,24 @@
 
     <!-- dropzone css -->
     <link href="{% static 'libs/dropzone/min/dropzone.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <link href="{% static 'libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'libs/toastr/build/toastr.min.css' %}">
+
 {% endblock extra_css %}
 
 {% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message|safe }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -21,97 +37,128 @@
                     <div id="addproduct-nav-pills-wizard" class="twitter-bs-wizard">
                         <ul class="twitter-bs-wizard-nav">
                             <li class="nav-item">
-                                <a href="#barcode-scanner" class="nav-link" data-toggle="tab">
+                                <a href="#input-category" class="nav-link" data-toggle="tab">
                                     <span class="step-number">01</span>
-                                    <span class="step-title">Scan Barcode</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#product-img" class="nav-link" data-toggle="tab">
-                                    <span class="step-number">02</span>
-                                    <span class="step-title">Product Img</span>
+                                    <span class="step-title">Add Product Kemasan</span>
                                 </a>
                             </li>
                         </ul>
-                        <div class="tab-content twitter-bs-wizard-tab-content">
-                            <div class="tab-pane" id="barcode-scanner">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                    <h4 class="card-title">Scan Barcode</h4>
-                                    <p class="card-title-desc">Scan barcode anda</p>
-                                    {% if cam_status %}
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        Camera stream status: connected
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <form action="" method="post" id="fromProductKemasan">
+                            {% csrf_token %}
+                            <div class="tab-content twitter-bs-wizard-tab-content">
+                                {% for error in form.errors %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ error }}
                                     </div>
-                                    <img src="{% url 'dashboard:camera_feed' %}" class="img-fluid" />
-                                    {% else %}
-                                        <div class="alert alert-danger" role="alert">
-                                            Camera stream status: Camera is either not accessible or busy
+                                {% endfor %}
+                                <div class="tab-pane" id="input-category">
+                                    <div class="mb-3">
+                                        <div class="row">
+                                            <div class="col-lg-5">
+                                                <div class="mb-3">
+                                                    <label for="category" id="{{ form.category.id_for_label }}">{{ form.category.label }}</label>
+                                                    <select class="form-control select2" name="{{ form.category.name }}" id="{{ form.category.id_for_label }}">
+
+                                                        {% for x, y in form.fields.category.choices %}
+                                                        <option value="{{ x }}" {% if form.fields.category.value == x or object.category == x %} selected{% endif %}>{{ y }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% if form.category.errors %}
+                                                        {% for error in form.category.errors %}
+                                                            <div class="alert alert-danger mt-3" role="alert">
+                                                                {{ error }}
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <div class="mb-4">
+                                                    <label class="form-label" id="{{ form.expiry_date.id_for_label }}">{{ form.expiry_date.label }}</label>
+                                                    <div class="input-group" id="{{ form.expiry_date.id_for_label }}">
+                                                        <input type="text" class="form-control" name="{{ form.expiry_date.name }}" placeholder="dd M, yyyy"
+                                                            data-date-format="dd M, yyyy" data-date-container='#{{ form.expiry_date.id_for_label }}' value="{{ object.expiry_date|date:"d M, Y" }}" data-provide="datepicker">
+
+                                                        <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+                                                    </div><!-- input-group -->
+                                                    {% if form.expiry_date.errors %}
+                                                        {% for error in form.expiry_date.errors %}
+                                                            <div class="alert alert-danger mt-3" role="alert">
+                                                                {{ error }}
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div clas="mb-3" style="margin-top: 30px;">
+                                                    <a class="btn btn-outline-info d-grid" href="#" role="button">Scan</a>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="alert alert-warning" role="alert">
-                                            <b>Things to check:</b>
-                                            <ul class="text-right list-inline">
-                                                <li>USB connection?</li>
-                                                <li>Camera is already in use?</li>
-                                            </ul>
+                                        <div class="row">
+                                            <div class="col-lg-5">
+
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="{{ form.barcode_input.id_for_label }}">{{ form.barcode_input.label }}</label>
+                                                    <input id="{{ form.barcode_input.id_for_label }}" name="{{ form.barcode_input.name }}" value="{{ object.barcode.barcode }}" type="text" class="form-control">
+                                                    {% if form.barcode_input.errors %}
+                                                        {% for error in form.name.errors %}
+                                                            <div class="alert alert-danger mt-3" role="alert">
+                                                                {{ error }}
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endif %}
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-5">
+
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="{{ form.name.id_for_label }}">Product Name</label>
+                                                    <input id="{{ form.name.id_for_label }}" name="{{ form.name.name }}" value="{{ object.name }}" type="text" class="form-control">
+                                                    {% if form.name.errors %}
+                                                        {% for error in form.name.errors %}
+                                                            <div class="alert alert-danger mt-3" role="alert">
+                                                                {{ error }}
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="mb-3" style="margin-top: 30px;">
+                                                    <a class="btn btn-outline-info d-grid" href="#" role="button">Scan</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label" for="{{ form.description.id_for_label }}">Product Description (Optional)</label>
+                                            <textarea class="form-control" id="{{ form.description.id_for_label }}" name="{{ form.description.name }}" rows="5">
+                                                {% if object %}
+                                                    {{ object.description }}
+                                                {% endif %}
+                                            </textarea>
+                                            {% if form.description.errors %}
+                                                {% for error in form.description.errors %}
+                                                    <div class="alert alert-danger mt-3" role="alert">
+                                                        {{ error }}
+                                                    </div>
+                                                {% endfor %}
+                                            {% endif %}
                                         </div>
 
-                                    {% endif %}
-                                </div>
-                                <div class="col-lg-6">
-                                    <h4 class="card-title">Information</h4>
-                                    <p class="card-title-desc">Barcode Information</p>
-                                    <form>
-                                        <div class="mb-3">
-                                            <label class="form-label" id="lbl_BarcodeData" for="txt_BarcodeData">Barcode</label>
-                                            <input id="txt_BarcodeData" class="form-control" readonly>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label" for="price">Product Name</label>
-                                            <input id="txt_BarcodeName" class="form-control" readonly>
-                                        </div>
-                                        <div class="mb-3">
-                                            <em id="lbl_LastModified"></em>
-                                        </div>
-
-                                    </form>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <a id="btn_ReadQRCode" class="btn btn-primary" href="#">Read barcode</a>
-                                        </div>
-                                        <div class="col-6">
-                                            <a id="btn_AddNewBarcode" class="btn btn-success" href="#" hidden>Add New</a>
-                                        </div>
                                     </div>
-
-
-                                </div>
                                 </div>
 
                             </div>
-                            <div class="tab-pane" id="product-img">
-                                <h4 class="card-title">Basic Information</h4>
-                                <p class="card-title-desc">Fill all information below</p>
+                            <ul class="pager wizard twitter-bs-wizard-pager-link">
+                                <a class="btn btn-outline-warning" href="{% url "dashboard:list-products" %}">Back</a>
+                                <li class="next"><button class="btn btn-outline-info" href="#">Submit</button></li>
+                            </ul>
 
-                                <form>
-                                    <div class="mb-3">
-                                        <label class="form-label" for="productname">Product Name</label>
-                                        <input id="productname" name="productname" type="text" class="form-control">
-                                    </div>
+                        </form>
 
-                                    <div class="mb-3">
-                                        <label class="form-label" for="productdesc">Product Description</label>
-                                        <textarea class="form-control" id="productdesc" rows="5"></textarea>
-                                    </div>
-                                </form>
-                            </div>
-
-                        </div>
-                        <ul class="pager wizard twitter-bs-wizard-pager-link">
-                            <li class="previous"><a href="#">Previous</a></li>
-                            <li class="next"><a href="#">Next</a></li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -135,7 +182,72 @@
     <!-- init js -->
     <script src="{% static 'js/pages/ecommerce-add-product.init.js' %}"></script>
 
+    <script src="{% static 'libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}"></script>
+
+    <!-- toastr plugin -->
+    <script src="{% static 'libs/toastr/build/toastr.min.js' %}"></script>
+
+    <!-- toastr init -->
+    <script src="{% static 'js/pages/toastr.init.js' %}"></script>
+
+
     <script>
+    function success_redirect() {
+        window.location.href = "{% url 'dashboard:list-products' %}";
+    }
+
+    $("form#fromProductKemasan").submit(function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(),
+            success: function(data) {
+                toastr.success('{% if object %}Product Updated Successfully{% else %}Product Added Successfully{% endif %}', 'Success', {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "2000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                });
+                setTimeout(success_redirect, 2000);
+            },
+            error: function(data) {
+                console.log(data);
+                toastr.error('Product Update Failed', 'Error', {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                });
+            }
+        });
+    });
+
+
     $("#btn_ReadQRCode").on("click", function (e) {
         console.log("Ajax request triggered.");
         e.preventDefault();

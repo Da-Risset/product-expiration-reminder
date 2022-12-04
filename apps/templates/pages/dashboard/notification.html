@@ -1,0 +1,142 @@
+{% extends "partials/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block extra_css %}
+    <link href="{% static 'libs/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css' %}" rel="stylesheet">
+    <link href="{% static 'libs/spectrum-colorpicker2/spectrum.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'libs/toastr/build/toastr.min.css' %}">
+
+
+{% endblock %}
+
+{% block content %}
+    <div class="row d-flex justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+
+                    <h4 class="card-title">Settings Notifikasi</h4>
+                    <p class="card-title-desc">Permudah hidup anda!</p>
+                    <form id="notificationForm" method="post" action="">
+                        {% csrf_token %}
+                        <div class="d-flex">
+                            <div>
+                                <p>Notif me? </p>
+                            </div>
+                            <div style="margin-left: 30px;">
+                                <input type="checkbox" id="{{ form.notification.id_for_label }}" name="{{ form.notification.name }}" switch="primary" checked />
+                                <label for="{{ form.notification.id_for_label }}" data-on-label="Yes" data-off-label="No"></label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ form.media.id_for_label }}">Media</label>
+                            <select class="form-control select2" id="{{ form.media.id_for_label }}" name="{{ form.media.name }}">
+                                {% for media in form.media.field.choices %}
+                                    <option value="{{ media.0 }}">{{ media.1 }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if form.media.errors %}
+                                {% for error in form.media.errors %}
+                                    <div class="alert alert-danger mt-3" role="alert">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="d-flex mb-3">
+                            <div>
+                                <p>Send Notification if warning ? </p>
+                            </div>
+                            <div style="margin-left: 30px;">
+                                <input type="checkbox" id="{{ form.warnings.id_for_label }}" name="{{ form.warnings.name }}" switch="primary" checked />
+                                <label for="{{ form.warnings.id_for_label }}" data-on-label="Yes" data-off-label="No"></label>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 d-grid">
+                            <button type="submit" class="btn btn-outline-info">Save</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+    <!-- end row -->
+{% endblock %}
+
+{% block extra_javascript %}
+    <script src="{% static 'libs/select2/js/select2.min.js' %}"></script>
+    <script src="{% static 'libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}"></script>
+    <script src="{% static 'libs/spectrum-colorpicker2/spectrum.min.js' %}"></script>
+    <script src="{% static 'libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js' %}"></script>
+    <script src="{% static 'libs/admin-resources/bootstrap-filestyle/bootstrap-filestyle.min.js' %}"></script>
+    <script src="{% static 'libs/bootstrap-maxlength/bootstrap-maxlength.min.js' %}"></script>
+    <!-- toastr plugin -->
+    <script src="{% static 'libs/toastr/build/toastr.min.js' %}"></script>
+
+    <script src="{% static 'js/pages/toastr.init.js' %}"></script>
+
+    <script>
+    function success_redirect() {
+        window.location.href = "{% url 'dashboard:notifications' %}";
+    }
+    $("form#notificationForm").submit(function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(),
+            success: function(data) {
+                toastr.success('Setting Notification Successfully', 'Success', {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "2000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                });
+                setTimeout(success_redirect, 2000);
+            },
+            error: function(data) {
+                console.log(data);
+                toastr.error('Setting Notification Failed', 'Error', {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                });
+            }
+        });
+    });
+    </script>
+{% endblock %}

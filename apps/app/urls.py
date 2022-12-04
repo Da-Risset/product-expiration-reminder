@@ -19,12 +19,9 @@ from django.urls.conf import include
 from app import views
 
 urlpatterns = [
-    path('', include('dashboard.urls', namespace='dashboard')),  # Products
-    # Menu    
-    # path('',views.DashboardView.as_view(),name='dashboard'),# Dashboard   
-    # Apps 
+    path("", views.HomeView.as_view(), name="home"),
+    path('dashboard/', include('dashboard.urls', namespace='dashboard')),  # Products
     path('layouts/', include('layouts.urls')),  # Layout
     path('authentication/', include('authentication.urls')),  # Authentication
-
     path('admin/', admin.site.urls),  # Admin
 ]

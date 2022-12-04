@@ -37,11 +37,11 @@ chart.render();
 options = {
   series: [42, 26, 15],
   chart: { height: 250, type: "donut" },
-  labels: ["Product A", "Product B", "Product C"],
+  labels: ["Safety", "Warning", "Danger"],
   plotOptions: { pie: { donut: { size: "75%" } } },
   dataLabels: { enabled: !1 },
   legend: { show: !1 },
-  colors: ["#5664d2", "#1cbb8c", "#eeb902"],
+  colors: ["#1CBB8CFF", "#eeb902", "#df2020"],
 };
 (chart = new ApexCharts(
   document.querySelector("#donut-chart"),

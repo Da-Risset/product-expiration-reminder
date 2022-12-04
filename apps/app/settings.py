@@ -4,12 +4,15 @@ from django.contrib.messages import constants as messages
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+import environ
+env = environ.Env()
+environ.Env.read_env("../.env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'iw@m4xnf4))^gf-d_g5w*b(e!er78!6=$5p8n@77mg(&^r7a99'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,6 +45,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'dashboard.middlewares.notification_middleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -129,13 +134,14 @@ MESSAGE_TAGS = {
 }
 
 # SMTP Configure
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'xxx'
-# EMAIL_HOST_PASSWORD = 'xxx'
-# DEFAULT_FROM_EMAIL = 'xxx'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+ADMIN_EMAIL = env('ADMIN_EMAIL')
 
 
 LOGIN_URL = 'auth-login'

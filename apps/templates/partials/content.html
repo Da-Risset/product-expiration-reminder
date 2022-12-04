@@ -1,4 +1,133 @@
 {% load static %}
+
 {% block content %}
+    <div class="row">
+        <div class="col-xl-8">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card border border-success">
+                        <div class="card-body bg-transparent border-success">
+                            <div class="d-flex">
+                                <div class="flex-1 overflow-hidden">
+                                    <p class="text-truncate font-size-14 mb-2">Number of Safety</p>
+                                    <h4 class="mb-0">{{ safety_count }}</h4>
+                                </div>
+                                <div class="text-primary ms-auto"> <i class="text-success ri-checkbox-circle-line font-size-24"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border border-warning">
+                        <div class="card-body bg-transparent border-warning">
+                            <div class="d-flex">
+                                <div class="flex-1 overflow-hidden">
+                                    <p class="text-truncate font-size-14 mb-2">Number of Warning</p>
+                                    <h4 class="mb-0">{{ warning_count }}</h4>
+                                </div>
+                                <div class="text-primary ms-auto"> <i class="text-warning ri-error-warning-line font-size-24"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border border-danger">
+                        <div class="card-body bg-transparent border-danger">
+                            <div class="d-flex">
+                                <div class="flex-1 overflow-hidden">
+                                    <p class="text-truncate font-size-14 mb-2">Number of Danger</p>
+                                    <h4 class="mb-0">{{ danger_count }}</h4>
+                                </div>
+                                <div class="text-primary ms-auto"> <i class="text-danger ri-close-circle-line font-size-24"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+
+            <div class="card">
+                <div class="card-body">
+
+                    <h4 class="card-title mb-4">Latest Update Products</h4>
+                    <div class="table-responsive">
+                        <table class="table table-centered datatable dt-responsive nowrap" data-bs-page-length="5" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 20px;">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="checkboxall">
+                                            <label class="form-check-label mb-0" for="checkboxall">&nbsp;</label>
+                                        </div>
+                                    </th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Date Expired</th>
+                                    <th>Label</th>
+                                    <th style="width: 120px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in lastest_products %}
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="chkbox" class="form-check-input" id="checkboxall1">
+                                            <label class="form-check-label mb-0" for="checkboxall1">&nbsp;</label>
+                                        </div>
+                                    </td>
+                                    <td><a href="javascript: void(0);" class="text-dark fw-bold">{{ product.name }}</a>
+                                    </td>
+                                    <td>{% if product.get_category_display == 'b_s'%}Buah & Sayur{% elif product.get_category_display == 'd_p' %}Daging & Ikan{% else %}{{ product.get_category_display }}{% endif %}</td>
+                                    <td>{{ product.expiry_date }}</td>
+                                    <td>
+                                        <div class="badge badge-soft-{% if product.label == "W" %}warning{% elif product.label == "D" %}danger{% else %}success{% endif %} font-size-12">{{ product.get_label_display }}</div>
+                                    </td>
+                                    <td id="tooltip-container1"> <a href="{% url "dashboard:list-products" %}" class=" text-primary" data-bs-container="#tooltip-container1" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xl-4">
+            <div class="card">
+                <div class="card-body">
+
+                    <h4 class="card-title mb-4">Expired Date Analytics</h4>
+                    <div id="donut-chart" class="apex-charts"></div>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="text-center mt-4">
+                                <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-success font-size-10 me-1"></i> Safety</p>
+                                <h5>{{ percent_safety }} %</h5>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-center mt-4">
+                                <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-warning font-size-10 me-1"></i> Warning</p>
+                                <h5>{{ percent_warning }} %</h5>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-center mt-4">
+                                <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-danger font-size-10 me-1"></i> Danger</p>
+                                <h5>{{ percent_danger }} %</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- end row -->
 
 {% endblock content %}

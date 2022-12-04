@@ -1,0 +1,145 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block extra_css %}
+    <!-- DataTables -->
+    <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Responsive datatable examples -->
+    <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Sweet Alert-->
+    <link href="{% static 'libs/sweetalert2/sweetalert2.min.css' %}" rel="stylesheet" type="text/css" />
+
+{% endblock extra_css %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body  pt-0">
+                    <ul class="nav nav-tabs nav-tabs-custom mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link fw-bold p-3" href="{% url "dashboard:list-products" %}">Kemasan Product</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link p-3 fw-bold active" href="#">Non Kemasan Product</a>
+                        </li>
+                    </ul>
+                    <div class="table-responsive">
+                        <table class="table table-centered datatable dt-responsive nowrap " style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th style="width: 20px;">
+                                        <div class="form-checkbox">
+                                            <input type="checkbox" class="form-check-input" id="checkboxall">
+                                            <label class="form-check-label mb-0" for="checkboxall">&nbsp;</label>
+                                        </div>
+                                    </th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Quality</th>
+                                    <th>Expired Date</th>
+                                    <th>Label</th>
+                                    <th style="width: 120px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for product in products %}
+                                <tr>
+                                    <td>
+                                        <div class="form-checkbox">
+                                            <input type="checkbox" name='chkbox' class="form-check-input" id="checkboxall1">
+                                            <label class="form-check-label mb-0" for="checkboxall1">&nbsp;</label>
+                                        </div>
+                                    </td>
+
+                                    <td>{{ product.name }}</td>
+
+                                    <td>{{ product.get_category_display }}</td>
+
+                                    <td>
+                                        {{ product.expiry_date }}
+                                    </td>
+
+                                    <td><a href="javascript: void(0);" class="text-dark fw-bold">{{ product.get_quality_display }}</a> </td>
+
+                                    <td>
+                                        <div class="badge badge-soft-{% if product.label == "W" %}warning{% elif product.label == "D" %}danger{% else %}success{% endif %} font-size-12">{{ product.get_label_display }}</div>
+                                    </td>
+
+                                    <td>
+                                        <a href="{% url 'dashboard:edit-product-nonkemasan' product.id %}" class="me-3 text-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                        <a href="javascript:void(0);" id="delete-product-nonkemasan" data-id="{{ product.id }}" class="text-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-trash-can font-size-18"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+{% endblock content %}
+{% block extra_javascript %}
+    <!-- Required datatable js -->
+    <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+
+    <!-- Responsive examples -->
+    <script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+
+    <script src="{% static 'js/pages/ecommerce-datatables.init.js' %}"></script>
+
+    <!-- Sweet Alerts js -->
+    <script src="{% static 'libs/sweetalert2/sweetalert2.min.js' %}"></script>
+
+    <!-- Sweet alert init js-->
+    <script src="{% static 'js/pages/sweet-alerts.init.js' %}"></script>
+
+    <script>
+    $(document).ready(function(){
+        $(document).on('click', '#delete-product-nonkemasan', function(e){
+            e.preventDefault();
+            var id = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{% url 'dashboard:delete-product-nonkemasan' %}",
+
+                        data: {
+                            'id': id,
+                        },
+                        success: function(response){
+                            if(response.status == 'success'){
+                                Swal.fire(
+                                    'Deleted!',
+                                    'Your file has been deleted.',
+                                    'success'
+                                ).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                })
+                            }
+                        }
+                    })
+                }
+            })
+        })
+    })
+
+    </script>
+
+{% endblock extra_javascript %}

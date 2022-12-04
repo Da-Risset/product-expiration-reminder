@@ -1,19 +1,21 @@
 {% autoescape off %}
 
-Welcome {{username}},
+Halo {{username}},
 
+    Pemberitahuan Produk Kadaluarsa
 
-    We received a request to reset the password for your account for this email address. To initiate the password reset process for your account, click the link below.
-{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
+    id produk : {{id}}
+    nama product : {{name_product}}
+    label product : {{label_product}}
+    durasi kadaluarsa : {{expired}}
+    tanggal kadaluarsa : {{expiry_date}}
 
-    This link can only be used once. If you need to reset your password again, please visit {{ protocol }}://{{domain}} and request another reset.
-If you did not make this request, you can simply ignore this email.
+    Mohon diperhatikan, produk ini akan kadaluarsa dalam waktu {{expired}} hari lagi.
+    Tepatnya pada tanggal {{expiry_date}}.
 
 
 Sincerely,
-The Timelock Team
-
-
+The {{ signature }} Team
 
 
 {% endautoescape %}

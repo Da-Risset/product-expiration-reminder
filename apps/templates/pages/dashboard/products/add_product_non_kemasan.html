@@ -1,55 +1,257 @@
-{% extends 'partials/base.html' %}
+{% extends "partials/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+    <!-- twitter-bootstrap-wizard css -->
+    <link rel="stylesheet" href="{% static 'libs/twitter-bootstrap-wizard/prettify.css' %}">
+
+    <!-- select2 css -->
+    <link href="{% static 'libs/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- dropzone css -->
+    <link href="{% static 'libs/dropzone/min/dropzone.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <link href="{% static 'libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'libs/toastr/build/toastr.min.css' %}">
+
+{% endblock extra_css %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
 
-                <h2 class="card-title">Add Produk non-Kemasan</h2>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label" class="control-label">Category</label>
-                                <select class="form-control select2">
-                                    <option>Select</option>
-                                    <option value="BS">Buah & Sayur</option>
-                                    <option value="DI">Daging & Ikan</option>
-                                    <!-- <option value="KC">Kecantikan</option>
-                                    <option value="OB">Obat</option>
-                                    <option value="LA">Lainnya</option> -->
-                                </select>
+                    <div id="addproduct-nav-pills-wizard" class="twitter-bs-wizard">
+                        <ul class="twitter-bs-wizard-nav">
+                            <li class="nav-item">
+                                <a href="#input-category" class="nav-link" data-toggle="tab">
+                                    <span class="step-number">01</span>
+                                    <span class="step-title">Add Product Non Kemasan</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <form action="" method="post" id="fromProductNonKemasan">
+                            {% csrf_token %}
+                            <div class="tab-content twitter-bs-wizard-tab-content">
+                                {% for error in form.errors %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                                <div class="tab-pane" id="input-category">
+                                    <div class="mb-3">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="category" id="{{ form.category.id_for_label }}">{{ form.category.label }}</label>
+                                                    <select class="form-control select2" name="{{ form.category.name }}" id="{{ form.category.id_for_label }}">
+                                                        {% for x, y in form.fields.category.choices %}
+                                                        <option value="{{ x }}" {% if form.fields.category.value == x or object.category == x %} selected{% endif %}>{{ y }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% if form.category.errors %}
+                                                        {% for error in form.category.errors %}
+                                                            <div class="alert alert-danger mt-3" role="alert">
+                                                                {{ error }}
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-5">
+
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="{{ form.name.id_for_label }}">Product Name</label>
+                                                    <input id="{{ form.name.id_for_label }}" name="{{ form.name.name }}" type="text" class="form-control" value="{{ object.name }}">
+                                                    {% if form.name.errors %}
+                                                        {% for error in form.name.errors %}
+                                                            <div class="alert alert-danger mt-3" role="alert">
+                                                                {{ error }}
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-5">
+                                                <div class="mb-3">
+                                                    <label for="category" id="{{ form.quality.id_for_label }}">{{ form.quality.label }}</label>
+                                                    <select class="form-control select2" name="{{ form.quality.name }}" id="{{ form.quality.id_for_label }}">
+                                                        {% for x, y in form.fields.quality.choices %}
+                                                        <option value="{{ x }}" {% if form.fields.quality.value == x or object.quality == x %} selected{% endif %}>{{ y }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% if form.quality.errors %}
+                                                        {% for error in form.quality.errors %}
+                                                            <div class="alert alert-danger mt-3" role="alert">
+                                                                {{ error }}
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-2">
+                                                <div class="mb-3" style="margin-top: 30px;">
+                                                    <a class="btn btn-outline-info d-grid" href="#" role="button">Scan</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label" for="{{ form.description.id_for_label }}">Product Description (Optional)</label>
+                                            <textarea class="form-control" id="{{ form.description.id_for_label }}" name="{{ form.description.name }}" rows="5">
+                                                {% if object %}
+                                                {{ object.description }}
+                                                {% endif %}
+                                            </textarea>
+                                            {% if form.description.errors %}
+                                                {% for error in form.description.errors %}
+                                                    <div class="alert alert-danger mt-3" role="alert">
+                                                        {{ error }}
+                                                    </div>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+
+                                    </div>
+                                </div>
+
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label" class="control-label">Features</label>
-                    
-                                <!-- <select class="select2 form-control select2-multiple" multiple="multiple" data-placeholder="Choose ...">
-                                    <option value="TO">Touchscreen</option>
-                                    <option value="CF">Call Function</option>
-                                    <option value="NO" selected>Notifications</option>
-                                    <option value="FI" selected>Fitness</option>
-                                    <option value="OU">Outdoor</option>
-                                </select> -->
-                            </div>
-                        </div>
+                            <ul class="pager wizard twitter-bs-wizard-pager-link">
+                                <a class="btn btn-outline-warning" href="{% url "dashboard:list-products-nonkemasan" %}">Back</a>
+                                <li class="next"><button class="btn btn-outline-info" href="#">Submit</button></li>
+                            </ul>
+                        </form>
+
                     </div>
-                    <form class="form-group">
-                        <div class="form-group mb-2">
-                          <label for="exampleFormControlFile1">Upload Images</label>
-                          <input type="file" class="form-control-file" id="exampleFormControlFile1">
-                        </div>
-                        <!-- <div class="form-group mb-3">
-                            <label for="exampleFormControlInput1">Nama Produk</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Nama Produk">
-                        </div> -->
-                        <button type="submit" class="btn btn-primary mb-2">Add Manual</button>
-                        <button type="submit" class="btn btn-primary mb-2">Submit</button>
-                    </form>
+                </div>
             </div>
         </div>
-    </div> <!-- end col -->
-</div> <!-- end row -->
-
+    </div>
+    <!-- end row -->
 {% endblock content %}
+
+{% block extra_javascript %}
+    <!-- twitter-bootstrap-wizard js -->
+    <script src="{% static 'libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js' %}"></script>
+
+    <script src="{% static 'libs/twitter-bootstrap-wizard/prettify.js' %}"></script>
+
+    <!-- select 2 plugin -->
+    <script src="{% static 'libs/select2/js/select2.min.js' %}"></script>
+
+    <!-- dropzone plugin -->
+    <script src="{% static 'libs/dropzone/min/dropzone.min.js' %}"></script>
+
+    <!-- init js -->
+    <script src="{% static 'js/pages/ecommerce-add-product.init.js' %}"></script>
+
+    <script src="{% static 'libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}"></script>
+
+    <script src="{% static 'libs/toastr/build/toastr.min.js' %}"></script>
+
+    <!-- toastr init -->
+    <script src="{% static 'js/pages/toastr.init.js' %}"></script>
+
+
+    <script>
+    function success_redirect() {
+        window.location.href = "{% url 'dashboard:list-products-nonkemasan' %}";
+    }
+
+    $("form#fromProductNonKemasan").submit(function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(),
+            success: function(data) {
+                toastr.success('{% if object %}Product Updated Successfully{% else %}Product Added Successfully{% endif %}', 'Success', {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "2000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                });
+                setTimeout(success_redirect, 2000);
+            },
+            error: function(data) {
+                console.log(data);
+                toastr.error('Product Update Failed', 'Error', {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                });
+            }
+        });
+    });
+
+
+    $("#btn_ReadQRCode").on("click", function (e) {
+        console.log("Ajax request triggered.");
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'dashboard:camera_feed' %}",
+            data: {
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                dataType: "json",
+            },
+            success: function (data) {
+                if (data.barcode_data !== null && data.barcode_data !== '') {
+                    console.log(data);
+                    $("#txt_BarcodeData").val(data.barcode_data).change();
+                    $("#lbl_LastModified").html(
+                        "Last modified at: " + data.file_saved_at
+                    );
+                    if (data.barcode_name !== null && data.barcode_name !== '') {
+                        $("#txt_BarcodeName").val(data.barcode_name).change();
+                    }
+                    else {
+                        $("#txt_BarcodeName").val("No name found").change();
+                        $("#btn_AddNewBarcode").removeAttr("hidden");
+                    }
+                } else {
+                    console.log(data);
+                    $("#txt_BarcodeData").val("").change();
+                    $("#lbl_LastModified").html("<h3><em>No data or file not found. Scan barcode again.</em></h3>");
+                }
+            },
+            error: function () {
+                console.log(error);
+            }
+        });
+    });
+    </script>
+
+{% endblock extra_javascript %}
+

@@ -17,7 +17,7 @@
 {% endblock content %}
 {% block extra_javascript %}
    <!-- apexcharts -->
-    {% comment %} <script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script> {% endcomment %}
+    <script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>
 
     <!-- jquery.vectormap map -->
     <script src="{% static 'libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js' %}"></script>
@@ -30,5 +30,7 @@
     <!-- Responsive examples -->
     <script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
     <script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+
+    <script src="{% static 'js/pages/dashboard.init.js' %}"></script>
 
 {% endblock extra_javascript %}
