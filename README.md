@@ -76,7 +76,7 @@ NOTE: This project is only working on python 3.7
 
 ### Notebooks
 - Date Detection [date_detection.ipynb](https://www.kaggle.com/code/danangharissetiawan/date-expired-incresnetv2-100finet/)
-- Fruit Detection [fruit_detection.ipynb](https://www.kaggle.com/code/danangharissetiawan/fruit-quality-classification/)
+- Fruit Detection [fruit_detection.ipynb](https://www.kaggle.com/code/arisdwiwahyudi/fruit-classification/)
 
 ### Labels
 - Date Expiration Labels [date_labels.txt](models/date-expired/date_exp_labels.txt)
